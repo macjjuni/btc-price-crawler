@@ -2,8 +2,9 @@
 import puppeteer from 'puppeteer-extra';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sharp = require('sharp');
 import { addExtra } from 'puppeteer-extra';
-import sharp from 'sharp';
 
 const puppeteerExtra = addExtra(puppeteer);
 puppeteer.use(StealthPlugin());
@@ -13,13 +14,13 @@ const clip = { x: 31, y: 310, width: 1030, height: 575 };
 const mvrvCrawler = async (): Promise<string> => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-    ],
-    ignoreHTTPSErrors: true,
+    // args: [
+    //   '--no-sandbox',
+    //   '--disable-setuid-sandbox',
+    //   '--disable-dev-shm-usage',
+    //   '--disable-gpu',
+    // ],
+    // ignoreHTTPSErrors: true,
   });
   try {
     const page = await browser.newPage();
