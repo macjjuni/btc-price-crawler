@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer-extra';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 import { addExtra } from 'puppeteer-extra';
+import sharp from 'sharp';
 
 const puppeteerExtra = addExtra(puppeteer);
 puppeteer.use(StealthPlugin());
@@ -28,14 +29,15 @@ const mvrvCrawler = async (): Promise<string> => {
     await page.waitForTimeout(2000);
 
     const screenshot = await page.screenshot({ clip: clip });
-    return screenshot.toString('base64');
-    // const webpBuffer = await sharp(screenshot)
-    //   .toFormat('webp')
-    //   .toBuffer()
-    //   .then((webpBuffer) => webpBuffer)
-    //   .catch((err) => {
-    //     throw Error('Webp 변환 에러');
-    //   });
+    const webpBuffer = await sharp(screenshot)
+      .toFormat('webp')
+      .toBuffer()
+      .then((webpBuffer) => webpBuffer)
+      .catch((err) => {
+        console.error(err);
+        return 'error';
+      });
+    return webpBuffer.toString('base64');
   } catch (err) {
     console.error(err);
   } finally {
