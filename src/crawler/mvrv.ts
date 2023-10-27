@@ -10,7 +10,16 @@ puppeteer.use(StealthPlugin());
 const clip = { x: 31, y: 310, width: 1030, height: 575 };
 
 const mvrvCrawler = async (): Promise<string> => {
-  const browser = await puppeteerExtra.launch({ headless: true });
+  const browser = await puppeteerExtra.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+    ],
+    ignoreHTTPSErrors: true,
+  });
   try {
     const page = await browser.newPage();
     await page.setViewport({ width: 1100, height: 900 });
