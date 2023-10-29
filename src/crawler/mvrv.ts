@@ -39,7 +39,9 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
     const page = await browser.newPage();
     await page.setViewport({ width: 1300, height: 900 });
 
-    await page.goto(crawlUrl, { waitUntil: 'load' });
+    await page.goto(crawlUrl, {
+      waitUntil: 'networkidle0',
+    });
 
     // MVRV Z-Score 크롤링
     const mvrvValEle = await page.$(
