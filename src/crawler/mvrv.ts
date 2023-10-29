@@ -68,10 +68,7 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
       .then((webpBuffer) => webpBuffer)
       .catch((err) => {
         console.error(err);
-        return {
-          src: 'error',
-          mvrv: mvrvVal,
-        };
+        throw Error('sharp Error!');
       });
 
     return {
@@ -80,6 +77,10 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
     };
   } catch (err) {
     console.error(err);
+    return {
+      src: 'error',
+      mvrv: mvrvVal,
+    };
   } finally {
     await browser.close();
   }
