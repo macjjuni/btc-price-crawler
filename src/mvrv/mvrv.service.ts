@@ -6,12 +6,16 @@ import mvrvCrawler from 'src/crawler/mvrv';
 export class MvrvService {
   private mvrvData: IMvrv = {
     src: '',
-    date: null,
+    mvrv: {
+      val: '',
+      date: '',
+    },
   };
 
   async getMvrvData() {
-    (this.mvrvData.src = await mvrvCrawler()),
-      (this.mvrvData.date = new Date());
+    const { src, mvrv } = await mvrvCrawler();
+    this.mvrvData.src = src;
+    this.mvrvData.mvrv = mvrv;
   }
 
   async getMvrv() {

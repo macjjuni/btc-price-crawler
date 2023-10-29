@@ -5,13 +5,25 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sharp = require('sharp');
 import { addExtra } from 'puppeteer-extra';
+import { IMvrvVal } from 'src/mvrv/mvrv.model';
 
 const puppeteerExtra = addExtra(puppeteer);
 puppeteer.use(StealthPlugin());
 
-const clip = { x: 31, y: 310, width: 1030, height: 575 };
+const clip = { x: 20, y: 230, width: 920, height: 470 };
+const crawlUrl = process.env.MVRV || '';
 
-const mvrvCrawler = async (): Promise<string> => {
+interface IReturnMvrv {
+  src: string;
+  mvrv: IMvrvVal;
+}
+
+const mvrvCrawler = async (): Promise<IReturnMvrv> => {
+  const mvrvVal: IMvrvVal = {
+    val: '',
+    date: '',
+  };
+
   const browser = await puppeteerExtra.launch({
     headless: true,
     args: [
@@ -23,11 +35,30 @@ const mvrvCrawler = async (): Promise<string> => {
     ignoreHTTPSErrors: true,
   });
   try {
+    if (crawlUrl === '') throw Error('Not Found Crawl Url');
     const page = await browser.newPage();
-    await page.setViewport({ width: 1100, height: 900 });
+    await page.setViewport({ width: 1300, height: 900 });
 
-    await page.goto('https://www.lookintobitcoin.com/charts/mvrv-zscore/');
-    await page.waitForTimeout(2000);
+    await page.goto(crawlUrl);
+
+    // MVRV Score 크롤링
+    const mvrvValEle = await page.$(
+      '.sidebar-sec.chart-stat-lastrows > ul > li > .stat-val > .val',
+    );
+    const mvrvDateEle = await page.$(
+      '.sidebar-sec.chart-stat-lastrows > ul > li > .date-label',
+    );
+    if (mvrvValEle && mvrvDateEle) {
+      const mvrvValue = await page.evaluate((el) => el.textContent, mvrvValEle);
+      const mvrvDate = await page.evaluate((el) => el.textContent, mvrvDateEle);
+      mvrvVal.val = mvrvValue;
+      mvrvVal.date = mvrvDate;
+    } else {
+      mvrvVal.val = 'not found';
+      mvrvVal.date = 'not found';
+    }
+    // 대기
+    await page.waitForTimeout(1000);
 
     const screenshot = await page.screenshot({ clip: clip });
     const webpBuffer = await sharp(screenshot)
@@ -36,9 +67,17 @@ const mvrvCrawler = async (): Promise<string> => {
       .then((webpBuffer) => webpBuffer)
       .catch((err) => {
         console.error(err);
-        return 'error';
+        return {
+          src: 'error',
+          mvrv: mvrvVal,
+        };
       });
-    return webpBuffer.toString('base64');
+    console.log(123);
+
+    return {
+      src: webpBuffer.toString('base64'),
+      mvrv: mvrvVal,
+    };
   } catch (err) {
     console.error(err);
   } finally {

@@ -1,5 +1,5 @@
 const { join } = require('path');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
 const isDev = process.env.NODE_ENV === 'development';
 
