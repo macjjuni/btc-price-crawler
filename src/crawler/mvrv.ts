@@ -40,8 +40,9 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
     await page.setViewport({ width: 1300, height: 900 });
 
     await page.goto(crawlUrl);
+    await page.waitForSelector('.chart-wrapper'); // 차트로딩 대기
 
-    // MVRV Score 크롤링
+    // MVRV Z-Score 크롤링
     const mvrvValEle = await page.$(
       '.sidebar-sec.chart-stat-lastrows > ul > li > .stat-val > .val',
     );
@@ -57,8 +58,7 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
       mvrvVal.val = 'not found';
       mvrvVal.date = 'not found';
     }
-    // 대기
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(500); // 차트 애니메이션 대기
 
     const screenshot = await page.screenshot({ clip: clip });
     const webpBuffer = await sharp(screenshot)
@@ -72,7 +72,6 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
           mvrv: mvrvVal,
         };
       });
-    console.log(123);
 
     return {
       src: webpBuffer.toString('base64'),
