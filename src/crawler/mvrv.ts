@@ -39,8 +39,7 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
     const page = await browser.newPage();
     await page.setViewport({ width: 1300, height: 900 });
 
-    await page.goto(crawlUrl);
-    await page.waitForNavigation();
+    await page.goto(crawlUrl, { waitUntil: 'load' });
 
     // MVRV Z-Score 크롤링
     const mvrvValEle = await page.$(
@@ -58,7 +57,7 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
       mvrvVal.val = 'not found';
       mvrvVal.date = 'not found';
     }
-    await page.waitForTimeout(500); // 차트 애니메이션 대기
+    await page.waitForTimeout(400); // 차트 애니메이션 대기
 
     const screenshot = await page.screenshot({ clip: clip });
     const webpBuffer = await sharp(screenshot)
