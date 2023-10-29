@@ -25,6 +25,8 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "dotenv": "^16.3.1",
+    "heroku-dotenv": "^0.4.1",
     "puppeteer": "^21.4.1",
     "puppeteer-core": "^21.4.1",
     "puppeteer-extra": "^3.3.6",
