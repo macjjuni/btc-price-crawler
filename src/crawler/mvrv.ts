@@ -40,7 +40,7 @@ const mvrvCrawler = async (): Promise<IReturnMvrv> => {
     await page.setViewport({ width: 1300, height: 900 });
 
     await page.goto(crawlUrl);
-    await page.waitForSelector('.chart-wrapper'); // 차트로딩 대기
+    await page.waitForNavigation();
 
     // MVRV Z-Score 크롤링
     const mvrvValEle = await page.$(
