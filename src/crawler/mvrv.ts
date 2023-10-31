@@ -10,7 +10,7 @@ import { IMvrvVal } from 'src/mvrv/mvrv.model';
 const puppeteerExtra = addExtra(puppeteer);
 puppeteer.use(StealthPlugin());
 
-const clip = { x: 20, y: 230, width: 920, height: 470 };
+const clip = { x: 20, y: 277, width: 920, height: 470 };
 const crawlUrl = process.env.MVRV || '';
 
 interface IReturnMvrv {
